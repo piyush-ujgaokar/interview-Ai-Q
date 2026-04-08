@@ -42,7 +42,6 @@ export const googleAuthController = async (req, res) => {
     }
 }
 
-
 export const logoutController=async(req,res)=>{
     try {
        await res.clearCookie('token')
