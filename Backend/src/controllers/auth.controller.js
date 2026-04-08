@@ -28,8 +28,10 @@ export const googleAuthController = async (req, res) => {
         res.status(200).json({
             message:"User Registered successfully",
             user:{
+                id:user._id,
                 name:user.name,
                 email:user.email,
+                credits:user.credits
             }
         })
     } catch (error) {

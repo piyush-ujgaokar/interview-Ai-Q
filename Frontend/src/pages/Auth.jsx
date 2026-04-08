@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import {motion} from 'motion/react'
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../utils/firebase';
+import axios from 'axios'
 
 const Auth = () => {
 
@@ -13,7 +14,18 @@ const Auth = () => {
     const handleGoogleAuth=async ()=>{
         try {
                 const response=await signInWithPopup(auth,provider)
-                console.log(response)
+                let user=response.user
+                let name=user.displayName
+                let email=user.email
+                const result=await axios.post("http://localhost:3000/api/auth/google",{
+                    name,email
+                },{
+                    withCredentials:true
+                })
+
+                console.log(result.data);
+                
+
         } catch (error) {
             console.log(error)
         }
