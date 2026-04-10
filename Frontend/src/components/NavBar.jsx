@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {motion} from 'motion/react'
 import {  RiRobot3Fill } from "react-icons/ri";
 import {  BsCoin } from "react-icons/bs";
 import {HiOutlineLogout } from 'react-icons/hi'
 import { FaUserAstronaut } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
+import { setUserData } from '../redux/userSlice';
+import AuthModel from './AuthModel';
 
 
 const NavBar = () => {
@@ -14,7 +17,25 @@ const NavBar = () => {
     const [showCreditPopUp, setshowCreditPopUp] = useState(false)
     const [showUserPopUp, setshowUserPopUp] = useState(false)
     const navigate=useNavigate()
+    const dispatch=useDispatch()
+    const [showAuth, setShowAuth] = useState(false)
     console.log(userData)
+
+    const handleLogout=async()=>{
+       try {
+             await axios.get('http://localhost:3000/api/auth/logout',{
+            withCredentials:true
+        })
+        dispatch(setUserData(null))
+        setshowCreditPopUp(false)
+        setshowUserPopUp(false)
+        navigate('/')
+       } catch (error) {
+            console.log(error)
+       }
+    }
+
+
 
   return (
     <div className=' bg-[#f3f3f3] flex justify-center px-4 pt-6 '>
@@ -22,7 +43,7 @@ const NavBar = () => {
         initial={{opacity:0,y:-40}}
         animate={{opacity:1,y:0}}
         transition={{duration:0.3}}
-        className='w-full max-w-6xl bg-white rounded-[24px] shadow-sm border border-gray-200 px-8 py-4 flex justify-between items-center relative '> 
+        className='w-full max-w-6xl bg-white rounded-3xl shadow-sm border border-gray-200 px-8 py-4 flex justify-between items-center relative '> 
             <div className='flex items-center gap-3 cursor-pointer'>
                 <div className='bg-black text-white p-2 rounded-lg'>
                     <RiRobot3Fill size={18}/>
@@ -33,6 +54,11 @@ const NavBar = () => {
                 <div className='relative'>
                     <button
                     onClick={()=>{
+                         if(!userData){
+                            setShowAuth(true)
+                            return
+                         }
+
                         setshowCreditPopUp(!showCreditPopUp)
                         setshowUserPopUp(false)
                     }}
@@ -54,6 +80,10 @@ const NavBar = () => {
                  <div className='relative'>
                     <button
                     onClick={()=>{
+                            if(!userData){
+                            setShowAuth(true)
+                            return
+                         }
                         setshowUserPopUp(!showUserPopUp)
                         setshowCreditPopUp(false)
                     }}
@@ -67,7 +97,9 @@ const NavBar = () => {
                             <button onClick={()=>{
                                 navigate('/history')
                             }} className='w-full text-left text-sm py-2 hover:text-black text-gray-600'>Interview History</button>
-                            <button className='w-full text-left text-sm py-2 flex items-center gap-2 text-red-500'>
+                            <button
+                            onClick={handleLogout}
+                             className='w-full text-left text-sm py-2 flex items-center gap-2 text-red-500'>
                                 <HiOutlineLogout size={16}/>
                                 LogOut</button>
                         </div>
@@ -77,6 +109,9 @@ const NavBar = () => {
                 </div>
             </div>
         </motion.div>
+
+        {showAuth && <AuthModel onClose={()=>setShowAuth(false)}/>}
+
     </div>
   )
 }
