@@ -15,6 +15,7 @@ import creditImg from '../assets/credit.png'
 import resumeImg from '../assets/resume.png'
 import pdfImg from '../assets/pdf.png'
 import historyImg from '../assets/history.png'
+import Footer from "../components/Footer";
 
 
 const Home = () => {
@@ -271,6 +272,7 @@ const Home = () => {
 
     {showAuth && <AuthModel onClose={()=>setShowAuth(false)}/>}
 
+            <Footer/>
 
     </div>
 
