@@ -21,6 +21,8 @@ const Auth = ({isModel = false}) => {
                 let user=response.user
                 let name=user.displayName
                 let email=user.email
+
+
                 const result=await axios.post("http://localhost:3000/api/auth/google",{
                     name,email
                 },{
